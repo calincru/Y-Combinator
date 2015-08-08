@@ -96,15 +96,15 @@ fibonacci function:
 (define fibonacci
   (lambda (n)
     (cond ((= n 0) 0)
-           ((= n 1) 1)
-           (else (+ (fibonacci (- n 1)) (fibonacci (- n 2)))))))
+          ((= n 1) 1)
+          (else (+ (fibonacci (- n 1)) (fibonacci (- n 2)))))))
 
 (define almost-fibonacci
   (lambda (f)
     (lambda (n)
       (cond ((= n 0) 0)
-             ((= n 1) 1)
-             (else (+ (fibonacci (- n 1)) (fibonacci (- n 2))))))))
+            ((= n 1) 1)
+            (else (+ (f (- n 1)) (f (- n 2))))))))
 ```
 
 So the Y-Combinator will give us recursion wherever we need it as long as we
@@ -274,14 +274,21 @@ solution in Scheme is the following definition of the Y-Combinator:
   (lambda (f)
     (f (lambda (x) ((Y f) x)))))
 ```
-The trick is to realize that **Y f** is going to become a function of one
-argument (assume curried functions) and that
+Unfortunately this doesn't work **(?)** with functions with more than one
+argument.  There must be an implementation for each number of arguments:
+```scheme
+; For two arguments functions
+(define Y2
+  (lambda (f)
+    (f (lambda (x y) ((Y2 f) x y)))))
 
-    (lambda (x) ((Y f) x))
+; For three arguments functions
+(define Y3
+  (lambda (f)
+    (f (lambda (x y z) ((Y3 f) x y z)))))
 
-is the same as
-
-    (Y f)
+; ... and so on
+```
 
 ## Actually deriving the Y-Combinator
 ### The lazy (normal order)
@@ -504,3 +511,5 @@ lambda function.  The definition of the applicative-order Y-Combinator becomes:
 
 (define factorial (Y almost-factorial))
 ```
+As before, we need to add new implementations for each number of arguments
+needed.

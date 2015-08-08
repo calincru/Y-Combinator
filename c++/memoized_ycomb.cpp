@@ -4,6 +4,7 @@
 #include "tuple_hash.hpp"
 
 namespace memoizer {
+namespace detail { struct no_copy{}; }
 
 template<class Self, class F, template<class> class Hash = tuple_hash::hash>
 struct y_memoizer;
@@ -17,12 +18,13 @@ struct y_memoizer<R(Args...), F, Hash> {
 
 public:
     template<class Fp>
-    y_memoizer(Fp&& f)
+    y_memoizer(detail::no_copy, Fp&& f)
         : base{std::forward<Fp>(f)}
     {}
 
-    R operator()(Args&&... args) {
-        auto tupledArgs = std::tie(args...);
+    template<class ...Ts>
+    R operator()(Ts&&... ts) {
+        auto tupledArgs = std::tie(ts...);
         auto it = cache.find(tupledArgs);
 
         if (it != cache.end()) {
@@ -30,7 +32,7 @@ public:
             return it->second;
         }
 
-        auto&& returnValue = base(*this, std::forward<Args>(args)...);
+        auto&& returnValue = base(*this, std::forward<Args>(ts)...);
 
         cache.emplace(std::move(tupledArgs), returnValue);
         return returnValue;
@@ -39,7 +41,7 @@ public:
 
 template<class Self, class F>
 y_memoizer<Self, std::decay_t<F>> memoize(F&& f) {
-    return std::forward<F>(f);
+    return {detail::no_copy{}, std::forward<F>(f)};
 }
 
 } // namespace memoizer

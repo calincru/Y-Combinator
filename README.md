@@ -473,9 +473,9 @@ Let's expand it a little bit more:
 ; Notice the similiarity between this Scheme definition and the lambda-calculus
 ; syntax: https://upload.wikimedia.org/math/9/0/a/90a21d15fde5ec13d1379791fa4a6548.png
 (define Y
-    (lambda (f)
-        ((lambda (x) (x x))
-         (lambda (x) (f (x x))))))
+  (lambda (f)
+    ((lambda (x) (x x))
+     (lambda (x) (f (x x))))))
 ```
 and now let's apply the inner lambda on its argument - the other inner lambda:
 ```scheme

@@ -24,17 +24,17 @@ public:
 
     template<class ...Ts>
     R operator()(Ts&&... ts) {
-        auto tupledArgs = std::tie(ts...);
-        auto it = cache.find(tupledArgs);
+        auto tupledTs = std::tie(ts...);
+        auto it = cache.find(tupledTs);
 
         if (it != cache.end()) {
             std::cout << "[y_memoizer] Cache hit!" << std::endl;
             return it->second;
         }
 
-        auto&& returnValue = base(*this, std::forward<Args>(ts)...);
+        auto&& returnValue = base(*this, std::forward<Ts>(ts)...);
 
-        cache.emplace(std::move(tupledArgs), returnValue);
+        cache.emplace(std::move(tupledTs), returnValue);
         return returnValue;
     }
 };

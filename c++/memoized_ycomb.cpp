@@ -9,7 +9,7 @@ namespace detail { struct no_copy{}; }
 template<class Self, class F, template<class> class Hash = tuple_hash::hash>
 struct y_memoizer;
 
-template <class R, class ...Args, class F, template<class> class Hash>
+template<class R, class ...Args, class F, template<class> class Hash>
 struct y_memoizer<R(Args...), F, Hash> {
     using tupled_args = std::tuple<std::decay_t<Args>...>;
 
@@ -17,9 +17,9 @@ struct y_memoizer<R(Args...), F, Hash> {
     std::unordered_map<tupled_args, R, Hash<tupled_args>> cache;
 
 public:
-    template<class Fp>
-    y_memoizer(detail::no_copy, Fp&& f)
-        : base{std::forward<Fp>(f)}
+    template<class L>
+    y_memoizer(detail::no_copy, L&& f)
+        : base{std::forward<L>(f)}
     {}
 
     template<class ...Ts>
@@ -39,9 +39,9 @@ public:
     }
 };
 
-template<class Self, class F>
-y_memoizer<Self, std::decay_t<F>> memoize(F&& f) {
-    return {detail::no_copy{}, std::forward<F>(f)};
+template<class Self, class L>
+y_memoizer<Self, std::decay_t<L>> memoize(L&& f) {
+    return {detail::no_copy{}, std::forward<L>(f)};
 }
 
 } // namespace memoizer

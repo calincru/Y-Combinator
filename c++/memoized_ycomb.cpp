@@ -21,21 +21,6 @@ public:
         : base{std::forward<Fp>(f)}
     {}
 
-    R operator()(Args&&... args) const {
-        auto tupledArgs = std::make_tuple(args...);
-        auto it = cache.find(tupledArgs);
-
-        if (it != cache.end()) {
-            std::cout << "[y_memoizer const] Cache hit!" << std::endl;
-            return it->second;
-        }
-
-        auto&& retValue = base(*this, std::forward<Args>(args)...);
-
-        cache.emplace(std::move(tupledArgs), retValue);
-        return retValue;
-    }
-
     R operator()(Args&&... args) {
         auto tupledArgs = std::tie(args...);
         auto it = cache.find(tupledArgs);
@@ -58,7 +43,6 @@ y_memoizer<Self, std::decay_t<F>> memoize(F&& f) {
 }
 
 } // namespace memoizer
-
 
 int main() {
     auto fib_base = [](auto&& fib, std::size_t n) {

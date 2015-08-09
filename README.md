@@ -17,7 +17,7 @@ This can be written in a more explicit style:
 ```
 
 Notice that when defining the factorial function we make a recursive call.
-We will call this kind of definition an **explicitly recursive definition**.
+We will call this kind of definition an **explicit recursive definition**.
 You will see soon what we call an **implicit recursive definition** (spoiler:
 a recursive function which is *generated* through non-recursive means).
 
@@ -39,7 +39,7 @@ Even though we ofter refer to Y as **the** Y-Combinator, in fact there are an
 infinite number of Y-Combinators.  We will only be concerned with two of
 them, one lazy and one strict.
 
-**Note**: Scheme is a dynamically and strongly typed programming language.
+**Note**: Scheme is a dynamic and strongly typed programming language.
 
 ## What is a combinator?
 A combinator is just a lambda expression with no free variables.  Examples:
@@ -119,9 +119,9 @@ like this:
 ```scheme
 (define factorial0 (almost-factorial identity))
 ```
-The interesting thing is factorial0 will correctly compute the factorial for all
-natural numbers up to and including zero (you'll see soon why we express it this
-way).
+The interesting thing is that factorial0 will correctly compute the factorial
+for all natural numbers up to and including zero (you'll see soon why we express
+it this way).
 
 Now, what if we do this:
 ```scheme
